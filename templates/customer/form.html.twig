@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Customer Form{% endblock %}
+{% macro printItem(contact) %}
+<div class="contact-item">
+    {{ form_errors(contact) }}
+    <div class="row">
+        <div class="col-xs-6">
+            {{ form_row(contact.name) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6">
+            {{ form_row(contact.email) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6">
+            <button type="button" class="remove-contact-btn btn btn-danger btn-sm">
+                Remove
+            </button>
+        </div>
+    </div>
+</div>
+{% endmacro %}
+{% import _self as formMacros %}
+
+{% block javascripts %}
+{{ parent() }}
+    {{ encore_entry_script_tags('customer') }}
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        {{ form_start(form) }}
+        <div class="col-xs-6 p-2">
+            {{ form_row(form.name) }}
+        </div>
+        <div class="col-xs-12 p-2">
+            <button type="button" class="add-contact-btn btn btn-success btn-sm" data-list-selector="#contacts-list">Add Contact</button>
+            {% set keysArray = 0 %}
+            {% if form.customerContacts|keys|length > 0 %}
+                {% set keysArray = form.customerContacts|keys %}
+            {% endif %}
+            <div id="contacts-list"
+                 data-prototype="{{ formMacros.printItem(form.customerContacts.vars.prototype)|e }}"
+                 data-widget-counter="{% if keysArray != 0 %}{{ max(form.customerContacts|keys) + 1 }}{% else %}0{% endif %}"
+            >
+            {% for contact in form.customerContacts %}
+                {{ formMacros.printItem(contact) }}
+            {% endfor %}
+            </div>
+        </div>
+        <div class="col-xs-12 p-2">
+            {{ form_widget(form.submit, { attr: { class: 'btn btn-primary btn-sm'}}) }}
+            <a role="button" class="btn btn-secondary btn-sm" href="{{ path('customer_list') }}">Cancel</a>
+        </div>
+        {% if form.customerContacts|length <= 0 %}
+            {{ form_widget(form.customerContacts) }}
+        {% endif %}
+        {{ form_rest(form) }}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

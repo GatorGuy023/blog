@@ -11,3 +11,4 @@ import '../node_modules/bootstrap/dist/css/bootstrap.css';
 // start the Stimulus application
 import './bootstrap';
 import '../node_modules/bootstrap/dist/js/bootstrap.min';
+import '../node_modules/jquery/dist/jquery.min';
